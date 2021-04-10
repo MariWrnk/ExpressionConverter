@@ -4,12 +4,7 @@ public class Map {
 
     private String exprs;
     private String[] symbols = new String[] {">", "=", "<"};
-    private String[] mapSigns = new String[] {"+", "-", "*"};
-    private String plus = "\\+";
-    private String sign;
-    private String element;
     private String prevElement;
-    private String[] parts;
 
     Map(String exprs, String element){
         this.exprs = exprs;

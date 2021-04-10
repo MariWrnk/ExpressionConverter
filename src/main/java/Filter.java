@@ -2,15 +2,10 @@ public class Filter {
 
     private String exprs;
     private String[] symbols = new String[] {">", "=", "<"};
-    private String filterSymbol;
+    public String filterSymbol;
     private String element;
     private String prevElement;
-    private int value;
-
-    Filter(String exprs){
-        this.exprs = exprs;
-        this.prevElement = "element";
-    }
+    public int value;
 
     Filter(String exprs, String element){
         this.exprs = exprs;
@@ -24,7 +19,7 @@ public class Filter {
         exprs = exprs.replaceAll(" ", "");
         String[] parts = exprs.split(filterSymbol);
         if(parts.length != 2){
-            throw new Exception("SYNTAX_ERROR: unrecognized filter");
+            throw new Exception("SYNTAX_ERROR");
         }
         element = parts[0];
         element = element.replace("element", prevElement);
@@ -84,7 +79,7 @@ public class Filter {
     }
 
     public String toString(){
-        return "(" + element + " " + filterSymbol + " " + value + ")";
+        return "(" + element + filterSymbol + value + ")";
     }
 
 }
