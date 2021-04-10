@@ -4,16 +4,17 @@ public class Filter {
     private String[] symbols = new String[] {">", "=", "<"};
     private String filterSymbol;
     private String element;
+    private String prevElement;
     private int value;
 
     Filter(String exprs){
         this.exprs = exprs;
-        this.element = "element";
+        this.prevElement = "element";
     }
 
     Filter(String exprs, String element){
         this.exprs = exprs;
-        this.element = element;
+        this.prevElement = element;
     }
 
     public void process() throws Exception {
@@ -25,30 +26,48 @@ public class Filter {
             throw new Exception("SYNTAX_ERROR: unrecognized filter");
         }
         element = parts[0];
+        element = element.replace("element", prevElement);
+        System.out.println("element = " + element);
         value = Integer.parseInt(parts[1]);
-        if(element.contains("(")){
+        System.out.println(value);
+        while(element.contains("(")){
             if(element.contains("+")){
                 int ind = element.indexOf("+");
-                int plusValue = Integer.parseInt(element.substring(ind + 1));
-                value = value - plusValue;
-                element = element.substring(0, ind);
+                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
+                    System.out.println("found number");
+                    int plusValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                    value = value - plusValue;
+                    element = element.substring(1, ind);
+                }else{
+                    break;
+                }
             }
             if(element.contains("-")){
                 int ind = element.indexOf("-");
-                int minusValue = Integer.parseInt(element.substring(ind + 1));
-                value = value + minusValue;
-                element = element.substring(0, ind);
+                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
+                    int minusValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                    value = value + minusValue;
+                    element = element.substring(1, ind);
+                }else{
+                    break;
+                }
             }
             if(element.contains("*")){
                 int ind = element.indexOf("*");
-                int multValue = Integer.parseInt(element.substring(ind + 1));
-                if(0 == 0){
-                    value = value - multValue;
-                    element = element.substring(0, ind);
+                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
+                    int multValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                    double d = value / multValue;
+                    if(d % 1 == 0){
+                        value = value / multValue;
+                        element = element.substring(1, ind);
+                    }else{
+                        break;
+                    }
+                }else{
+                    break;
                 }
             }
         }
-
     }
 
     public boolean typeCheck(){
@@ -61,6 +80,10 @@ public class Filter {
             }
         }
         return rightType;
+    }
+
+    public String toString(){
+        return "(" + element + " " + filterSymbol + " " + value + ")";
     }
 
 }
