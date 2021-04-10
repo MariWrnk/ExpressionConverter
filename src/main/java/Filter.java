@@ -21,21 +21,20 @@ public class Filter {
         if(!typeCheck()){
             throw new Exception("TYPE_ERROR");
         }
+        exprs = exprs.replaceAll(" ", "");
         String[] parts = exprs.split(filterSymbol);
         if(parts.length != 2){
             throw new Exception("SYNTAX_ERROR: unrecognized filter");
         }
         element = parts[0];
         element = element.replace("element", prevElement);
-        System.out.println("element = " + element);
         value = Integer.parseInt(parts[1]);
-        System.out.println(value);
         while(element.contains("(")){
             if(element.contains("+")){
                 int ind = element.indexOf("+");
-                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
-                    System.out.println("found number");
-                    int plusValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                String str = element.substring(ind + 1, element.length() - 1);
+                if(!str.contains("element") && !str.equals("")){
+                    int plusValue = Integer.parseInt(str);
                     value = value - plusValue;
                     element = element.substring(1, ind);
                 }else{
@@ -44,8 +43,9 @@ public class Filter {
             }
             if(element.contains("-")){
                 int ind = element.indexOf("-");
-                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
-                    int minusValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                String str = element.substring(ind + 1, element.length() - 1);
+                if(!str.contains("element") && !str.equals("")){
+                    int minusValue = Integer.parseInt(str);
                     value = value + minusValue;
                     element = element.substring(1, ind);
                 }else{
@@ -54,8 +54,9 @@ public class Filter {
             }
             if(element.contains("*")){
                 int ind = element.indexOf("*");
-                if(!element.substring(ind + 1, element.length() - 1).contains("element")){
-                    int multValue = Integer.parseInt(element.substring(ind + 1, element.length() - 1));
+                String str = element.substring(ind + 1, element.length() - 1);
+                if(!str.contains("element") && !str.equals("")){
+                    int multValue = Integer.parseInt(str);
                     double d = value / multValue;
                     if(d % 1 == 0){
                         value = value / multValue;
